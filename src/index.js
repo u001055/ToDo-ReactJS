@@ -13,11 +13,9 @@ export default class App extends Component {
   
   maxId = 100;
 
-  state = { todoData: [
-    this.createTodoItem('Drink Coffee'),
-    this.createTodoItem('Make Awesome App'),
-    this.createTodoItem('Have a lunch')
-    ],
+  storage = JSON.parse(localStorage.getItem('todoData'));
+
+  state = { todoData: this.storage,
     term: '',
     filter: 'all'
   };
@@ -39,6 +37,7 @@ export default class App extends Component {
         ...todoData.slice(0, idx),
         ...todoData.slice(idx + 1)
       ];
+      localStorage.setItem('todoData', JSON.stringify(newArray));
       return {
         todoData: newArray
       };
@@ -48,6 +47,7 @@ export default class App extends Component {
   addItemFunc = (text) => {
     this.setState(({todoData}) => {
       const newArray = [...todoData, this.createTodoItem(text)];
+      localStorage.setItem('todoData', JSON.stringify(newArray));
       return {
         todoData: newArray
       };
@@ -67,17 +67,19 @@ export default class App extends Component {
   };
 
   onToggleImportant = (id) => {
-    this.setState(({ todoData }) => {
+    this.setState(({ todoData }) => {      
+      localStorage.setItem('todoData', JSON.stringify(this.toggleProperty(todoData, id, 'important')));
       return {
-        todoData: this.toggleProperty(todoData, id, 'important')
+        todoData: JSON.parse(localStorage.getItem('todoData'))
       };
     });
   };
 
   onToggleDone = (id) => {
-    this.setState(({ todoData }) => {      
+    this.setState(({ todoData }) => {   
+      localStorage.setItem('todoData', JSON.stringify(this.toggleProperty(todoData, id, 'done')));   
       return {
-        todoData: this.toggleProperty(todoData, id, 'done')
+        todoData: JSON.parse(localStorage.getItem('todoData'))
       };
     });
   };
